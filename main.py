@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from typing import Optional
 import uvicorn
@@ -13,6 +13,7 @@ class UserData(BaseModel):
 
 @app.post("/api/login")
 async def login(user_data: UserData):
+    print("Received login request")  # 요청을 받았음을 나타내는 출력
     try:
         # 여기서 받은 데이터를 처리합니다.
         # 예: 데이터베이스에 저장, 토큰 검증 등
@@ -26,9 +27,16 @@ async def login(user_data: UserData):
 
         return {"message": "Login successful", "userId": user_data.userId}
     except Exception as e:
+        print(f"Error processing login request: {str(e)}")  # 에러 발생 시 출력
         raise HTTPException(status_code=400, detail=str(e))
 
-# 추가적인 엔드포인트들...
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"Received request: {request.method} {request.url}")  # 모든 요청에 대한 로그
+    response = await call_next(request)
+    return response
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    print("Starting FastAPI server...")  # 서버 시작 시 출력
+    uvicorn.run(app, host="0.0.0.0", port=80)
+    print("FastAPI server is running")  # 서버 실행 중 출력
