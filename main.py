@@ -11,7 +11,7 @@ class UserData(BaseModel):
     userEmail: Optional[str] = None
     userName: Optional[str] = None
 
-@app.post("/api/login")
+@app.post("/")
 async def login(user_data: UserData):
     print("Received login request")  # 요청을 받았음을 나타내는 출력
     try:
