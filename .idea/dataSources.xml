@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="@rds-yedecos" uuid="4fafe069-33dc-40d1-b42d-af4e4815484f">
+    <data-source source="LOCAL" name="@rds-yedecos" uuid="34fded5b-65f0-48f0-aa14-288c17d0630a">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>

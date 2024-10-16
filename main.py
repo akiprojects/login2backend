@@ -69,15 +69,17 @@ class Performance(BaseModel):
     prfruntime: str  # 런타임
     fcltynm: str     # 공연장명
     district_code: int  # 지역코드
+    poster: str  # 포스터 URL 추가
+
 @app.get("/performances", response_model=List[Performance])
 async def get_performances():
     try:
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
-        # 테이블 이름을 Busan_kopis_performance_db로 수정
+        # 포스터 URL도 함께 가져오는 쿼리
         query = """
-        SELECT prfnm, genrenm, prfruntime, fcltynm, district_code 
+        SELECT prfnm, genrenm, prfruntime, fcltynm, district_code, poster
         FROM Busan_kopis_performance_db
         """
         cursor.execute(query)
@@ -101,7 +103,6 @@ async def get_performances():
     except Exception as e:
         print(f"Error fetching performances: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch performances")
-
 
 # 모든 요청을 로그로 기록하는 미들웨어
 @app.middleware("http")
