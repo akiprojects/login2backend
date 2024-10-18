@@ -56,6 +56,9 @@ def save_user_to_database(user_data: UserData):
         connection = get_user_db_connection()
         cursor = connection.cursor()
 
+        # expiresAt이 없거나 빈 문자열이면 NULL 처리
+        expires_at_value = user_data.expiresAt if user_data.expiresAt not in [None, ''] else None
+
         # INSERT 쿼리, 이미 존재하는 경우 UPDATE
         query = """
         INSERT INTO user (userId, accessToken, refreshToken, expiresAt, tokenType, userEmail, userName, userGender, userBirthday, userBirthyear)
@@ -70,13 +73,13 @@ def save_user_to_database(user_data: UserData):
             userGender = VALUES(userGender),
             userBirthday = VALUES(userBirthday),
             userBirthyear = VALUES(userBirthyear),
-            updated_at = CURRENT_TIMESTAMP   -- 업데이트 시 updated_at을 갱신
+            updated_at = CURRENT_TIMESTAMP
         """
 
         # 데이터를 튜플로 변환하여 쿼리에 전달
         data = (
             user_data.userId, user_data.accessToken, user_data.refreshToken,
-            user_data.expiresAt, user_data.tokenType, user_data.userEmail,
+            expires_at_value, user_data.tokenType, user_data.userEmail,
             user_data.userName, user_data.userGender, user_data.userBirthday, user_data.userBirthyear
         )
 
@@ -96,6 +99,7 @@ def save_user_to_database(user_data: UserData):
     except mysql.connector.Error as err:
         print(f"Error saving user data: {err}")
         raise HTTPException(status_code=500, detail="Failed to save user data")
+
 
 
 # POST 요청으로 사용자 데이터를 받는 엔드포인트
