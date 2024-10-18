@@ -69,7 +69,8 @@ def save_user_to_database(user_data: UserData):
             userName = VALUES(userName),
             userGender = VALUES(userGender),
             userBirthday = VALUES(userBirthday),
-            userBirthyear = VALUES(userBirthyear)
+            userBirthyear = VALUES(userBirthyear),
+            updated_at = CURRENT_TIMESTAMP   -- 업데이트 시 updated_at을 갱신
         """
 
         # 데이터를 튜플로 변환하여 쿼리에 전달
@@ -78,6 +79,10 @@ def save_user_to_database(user_data: UserData):
             user_data.expiresAt, user_data.tokenType, user_data.userEmail,
             user_data.userName, user_data.userGender, user_data.userBirthday, user_data.userBirthyear
         )
+
+        # 쿼리 및 데이터를 출력하여 확인
+        print("Executing query: ", query)
+        print("With data: ", data)
 
         cursor.execute(query, data)
         connection.commit()
